@@ -10,10 +10,12 @@ ITS 국가교통정보센터(https://www.its.go.kr)에서 제공하는 도로 �
 | 파일 | 설명 | 용량 | 저장소 포함 여부 |
 |---|---|---|---|
 | `incident_data.csv` | 원본 전처리 완료 데이터 (약 62.3만 행) | 140MB | ❌ (`.gitignore`, GitHub 100MB 제한 초과) |
+| `incident_data.csv.gz` | 위 파일을 gzip -9로 압축한 버전 | 약 21.5MB | ✅ |
 | `incident_data_sample.csv` | 위 데이터에서 무작위 2,000행 추출 (시간순 정렬) | 약 440KB | ✅ |
 
-전체 데이터로 노트북을 재현하려면 ITS 국가교통정보센터에서 동일한 기간의 돌발정보를
-내려받아 아래 스키마에 맞게 전처리한 뒤 `incident_data.csv`로 이 폴더에 넣으면 된다.
+저장소에 압축된 전체 데이터(`incident_data.csv.gz`)가 포함되어 있어 별도 다운로드 없이
+클론만 하면 바로 노트북을 실행할 수 있다. `src/load_data.py`의 `load()`가
+`pandas.read_csv`로 `.gz` 확장자를 자동 인식해 압축을 풀어 읽는다.
 
 ## 스키마 (15개 컬럼)
 

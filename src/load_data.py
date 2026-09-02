@@ -3,7 +3,7 @@ import pandas as pd
 from pathlib import Path
 from .region_mapping import assign_region
 
-DATA_PATH = Path(__file__).resolve().parents[1] / "data" / "incident_data.csv"
+DATA_PATH = Path(__file__).resolve().parents[1] / "data" / "incident_data.csv.gz"
 
 SEASON_MAP = {
     3: "봄", 4: "봄", 5: "봄",
@@ -14,7 +14,8 @@ SEASON_MAP = {
 
 
 def load(path: Path = DATA_PATH, with_region: bool = True) -> pd.DataFrame:
-    df = pd.read_csv(path, encoding="utf-8-sig")
+    # 확장자가 .gz면 pandas가 자동으로 gzip 압축을 해제해서 읽는다.
+    df = pd.read_csv(path, encoding="utf-8-sig", compression="infer")
 
     df["돌발일시"] = pd.to_datetime(df["돌발일시"], errors="coerce")
     df = df.dropna(subset=["돌발일시"]).copy()

@@ -27,13 +27,10 @@ ITS 국가교통정보센터의 도로 돌발상황(돌발정보) 데이터(약 
 
 ## 데이터
 
-원본 CSV(`data/incident_data.csv`, 140MB)는 GitHub 기본 push 용량 제한(100MB)을 초과해
-이 저장소에는 포함하지 않았습니다(`.gitignore`). 대신 재현 확인용 샘플
-(`data/incident_data_sample.csv`, 2,000행)과 출처·스키마 문서만 포함했습니다.
-
-전체 데이터로 노트북을 실행하려면 [ITS 국가교통정보센터](https://www.its.go.kr)에서
-동일 기간(2024-11-06 ~ 2025-10-31)의 돌발정보를 별도로 다운로드해 스키마에 맞게 전처리한
-뒤 `data/incident_data.csv`로 저장해야 합니다. 자세한 컬럼 스키마는
+원본 CSV(140MB)는 GitHub 기본 push 용량 제한(100MB)을 초과해 비압축 상태로는 포함하지
+않았습니다(`.gitignore`). 대신 gzip으로 압축한 전체 데이터
+(`data/incident_data.csv.gz`, 약 21.5MB)를 저장소에 포함해, 클론만 하면 별도 다운로드
+없이 바로 노트북을 실행할 수 있습니다. 자세한 컬럼 스키마는
 [data/README.md](data/README.md)를 참고하세요.
 
 ## 노트북 실행
@@ -43,9 +40,9 @@ pip install -r requirements.txt
 jupyter notebook notebooks/
 ```
 
-`data/incident_data.csv` (전체 데이터)가 없으면 노트북이 실행되지 않습니다. 전체 데이터
-없이 구조만 확인하려면 `data/incident_data_sample.csv`를 `src/load_data.py`의
-`DATA_PATH` 인자로 넘겨 로드할 수 있습니다.
+`src/load_data.py`의 `load()`가 `data/incident_data.csv.gz`를 자동으로 읽습니다. 압축을
+풀지 않고 구조만 빠르게 확인하려면 `data/incident_data_sample.csv`(2,000행 샘플)를
+`load()`의 `path` 인자로 넘겨 로드할 수 있습니다.
 
 ## 분석 내용
 

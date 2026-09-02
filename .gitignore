@@ -1,4 +1,5 @@
-# 원본 전처리 데이터 (140MB, GitHub 100MB 제한 초과) — data/README.md 참고
+# 원본 전처리 데이터 비압축본 (140MB, GitHub 100MB 제한 초과).
+# gzip 압축본(data/incident_data.csv.gz, 약 21.5MB)은 git에 포함한다 — data/README.md 참고
 data/incident_data.csv
 
 # Python
