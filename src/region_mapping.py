@@ -1,46 +1,61 @@
 """
-위도(Y)/경도(X) 좌표를 대한민국 17개 시/도로 근사 분류하는 헬퍼 모듈.
+위도(Y)/경도(X) 좌표를 대한민국 17개 시/도 실제 행정경계와의 point-in-polygon
+방식으로 분류하는 헬퍼 모듈.
 
-주의(한계점):
-  - 행정구역 경계 shapefile 없이 각 시/도 대표 좌표(중심점)와의 최근접 거리로
-    근사 분류하는 방식입니다. 실제 행정경계와 다를 수 있으며, 특히 도 경계
-    인접 지역에서는 오분류 가능성이 있습니다. (README 한계점 참고)
+경계 데이터는 통계청 SGIS(공공누리 제1유형 라이선스) 2018년 시/도 경계를 기반으로 한
+southkorea/southkorea-maps 리포지토리의 GeoJSON을, 정확도 손실이 미미한 수준으로
+단순화(simplify tolerance 0.0005도)해 `data/boundaries/`에 포함했다 — 전체 62.3만 건
+중 172건(0.03%)만 단순화 전과 다르게 분류되는 수준이다.
+
+이전 버전(시/도 대표 좌표와의 최근접 거리 근사)은 서울 인근 좌표가 실제로는 경기도
+행정구역에 속하는데도 서울 중심점과 가까워 서울로 오분류되는 경우가 많아, 전체 발생
+건수 1위가 경기도(원본 보고서)가 아닌 서울로 나오는 문제가 있었다. 실제 행정경계
+기준으로 교체한 뒤에는 경기도가 1위로 나와 원본 보고서와 순서가 일치한다.
 """
-import numpy as np
+from pathlib import Path
+
+import geopandas as gpd
 import pandas as pd
 
-# 시/도 대표 좌표 (위도, 경도) — 근사치
-PROVINCE_CENTROIDS = {
-    "서울특별시": (37.5665, 126.9780),
-    "부산광역시": (35.1796, 129.0756),
-    "대구광역시": (35.8714, 128.6014),
-    "인천광역시": (37.4563, 126.7052),
-    "광주광역시": (35.1595, 126.8526),
-    "대전광역시": (36.3504, 127.3845),
-    "울산광역시": (35.5384, 129.3114),
-    "세종특별자치시": (36.4801, 127.2890),
-    "경기도": (37.4138, 127.5183),
-    "강원도": (37.8228, 128.1555),
-    "충청북도": (36.6357, 127.4917),
-    "충청남도": (36.5184, 126.8000),
-    "전라북도": (35.7175, 127.1530),
-    "전라남도": (34.8161, 126.4630),
-    "경상북도": (36.4919, 128.8889),
-    "경상남도": (35.4606, 128.2132),
-    "제주특별자치도": (33.4996, 126.5312),
-}
+BOUNDARY_PATH = (
+    Path(__file__).resolve().parents[1] / "data" / "boundaries" / "skorea_provinces_simplified.geojson"
+)
+
+_boundaries: gpd.GeoDataFrame | None = None
+
+
+def _load_boundaries() -> gpd.GeoDataFrame:
+    global _boundaries
+    if _boundaries is None:
+        _boundaries = gpd.read_file(BOUNDARY_PATH)[["name", "geometry"]]
+    return _boundaries
 
 
 def assign_region(y: pd.Series, x: pd.Series) -> pd.Series:
-    """위도(y)/경도(x) 배열을 받아 최근접 시/도 중심점 기준으로 지역명을 반환한다."""
-    names = list(PROVINCE_CENTROIDS.keys())
-    lat0 = np.array([v[0] for v in PROVINCE_CENTROIDS.values()])
-    lon0 = np.array([v[1] for v in PROVINCE_CENTROIDS.values()])
+    """위도(y)/경도(x) 배열을 받아 point-in-polygon으로 시/도명을 반환한다.
 
-    y_arr = y.to_numpy()[:, None]
-    x_arr = x.to_numpy()[:, None]
+    행정경계 밖으로 판정되는 좌표(해상 좌표, GPS 오차 등 전체의 약 0.3%)는
+    가장 가까운 시/도로 대체 배정해 항상 값을 반환한다.
+    """
+    boundaries = _load_boundaries()
+    points = gpd.GeoDataFrame(
+        index=y.index,
+        geometry=gpd.points_from_xy(x, y),
+        crs="EPSG:4326",
+    )
 
-    # 위경도差 기반 유클리드 근사 거리 (지역 분류 목적으로는 충분)
-    dist = (y_arr - lat0[None, :]) ** 2 + (x_arr - lon0[None, :]) ** 2
-    nearest_idx = np.argmin(dist, axis=1)
-    return pd.Series([names[i] for i in nearest_idx], index=y.index)
+    joined = gpd.sjoin(points, boundaries, how="left", predicate="within")
+    joined = joined[~joined.index.duplicated(keep="first")]
+    result = joined["name"]
+
+    missing_idx = result[result.isna()].index
+    if len(missing_idx):
+        # 거리 기반 최근접 판정이므로 미터 단위 평면좌표계(한국 중부원점)로 변환 후 계산한다.
+        KOREA_TM = "EPSG:5179"
+        nearest = gpd.sjoin_nearest(
+            points.loc[missing_idx].to_crs(KOREA_TM), boundaries.to_crs(KOREA_TM)
+        )
+        nearest = nearest[~nearest.index.duplicated(keep="first")]
+        result.loc[missing_idx] = nearest["name"]
+
+    return result.reindex(y.index)

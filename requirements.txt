@@ -5,3 +5,5 @@ seaborn>=0.13
 jupyter>=1.0
 nbformat>=5.10
 nbconvert>=7.16
+geopandas>=1.0
+shapely>=2.0

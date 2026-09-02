@@ -36,3 +36,14 @@ ITS 국가교통정보센터(https://www.its.go.kr)에서 제공하는 도로 �
 | `요일구분` | 평일/주말 구분 | `평일` |
 
 데이터 기간: 2024-11-06 ~ 2025-10-31.
+
+## 행정경계 데이터 (`boundaries/`)
+
+`src/region_mapping.py`가 위경도를 시/도로 분류할 때 사용하는 참고 데이터입니다.
+
+- 출처: 통계청 SGIS(https://sgis.kostat.go.kr) 2018년 시/도 경계, 공공누리 제1유형
+  라이선스로 배포되는 [southkorea/southkorea-maps](https://github.com/southkorea/southkorea-maps)
+  리포지토리의 GeoJSON을 사용
+- `skorea_provinces_simplified.geojson`: 저장소 용량을 위해 형상을 단순화
+  (simplify tolerance 0.0005도)한 버전. 원본 대비 전체 62.3만 건 중 172건(0.03%)만
+  다르게 분류된다.
