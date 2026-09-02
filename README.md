@@ -80,3 +80,13 @@ jupyter notebook notebooks/
 - **위험도 스코어링의 텍스트 기반 판별**: `돌발내용` 컬럼이 자유 텍스트(반정형)라 정규식/
   키워드 매칭으로 위치·차로 정보를 추출합니다. 드물게 일부 표현(예: 지명에 숫자+교가
   없는 교량명)은 위치 점수에서 누락될 수 있습니다.
+
+## 6. 대시보드
+
+[![도로 돌발상황 대시보드](https://public.tableau.com/static/images/_1/_17658672451790/sheet7/1.png)](https://public.tableau.com/views/_17658672451790/sheet7?:language=ko-KR&:display_count=n&:origin=viz_share_link)
+
+Tableau로 제작한 인터랙티브 대시보드입니다. 도로명, 도로타입, 돌발유형, 요일, 월,
+평일/주말, 지도 등 총 8가지 방식으로 필터링하여 대한민국 도로 돌발상황을
+직관적으로 분석·확인할 수 있습니다.
+
+▶ [Tableau Public에서 인터랙티브 버전 보기](https://public.tableau.com/views/_17658672451790/sheet7?:language=ko-KR&:display_count=n&:origin=viz_share_link)
