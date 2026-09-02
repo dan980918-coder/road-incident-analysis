@@ -1,0 +1,12 @@
+# 원본 전처리 데이터 (140MB, GitHub 100MB 제한 초과) — data/README.md 참고
+data/incident_data.csv
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
