@@ -31,7 +31,7 @@ ITS 국가교통정보센터의 도로 돌발상황(돌발정보) 데이터(약 
 이 저장소에는 포함하지 않았습니다(`.gitignore`). 대신 재현 확인용 샘플
 (`data/incident_data_sample.csv`, 2,000행)과 출처·스키마 문서만 포함했습니다.
 
-전체 데이터로 노트북을 실행하려면 **ITS 국가교통정보센터(https://www.its.go.kr)**에서
+전체 데이터로 노트북을 실행하려면 [ITS 국가교통정보센터](https://www.its.go.kr)에서
 동일 기간(2024-11-06 ~ 2025-10-31)의 돌발정보를 별도로 다운로드해 스키마에 맞게 전처리한
 뒤 `data/incident_data.csv`로 저장해야 합니다. 자세한 컬럼 스키마는
 [data/README.md](data/README.md)를 참고하세요.
@@ -81,7 +81,7 @@ jupyter notebook notebooks/
   키워드 매칭으로 위치·차로 정보를 추출합니다. 드물게 일부 표현(예: 지명에 숫자+교가
   없는 교량명)은 위치 점수에서 누락될 수 있습니다.
 
-## 6. 대시보드
+## 대시보드
 
 [![도로 돌발상황 대시보드](https://public.tableau.com/static/images/_1/_17658672451790/sheet7/1.png)](https://public.tableau.com/views/_17658672451790/sheet7?:language=ko-KR&:display_count=n&:origin=viz_share_link)
 
