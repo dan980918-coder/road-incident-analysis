@@ -414,11 +414,19 @@ Q1·Q3를 기준으로 해석한다.
 
 ## 대시보드
 
-[![도로 돌발상황 대시보드](https://public.tableau.com/static/images/_1/_17658672451790/sheet7/1.png)](https://public.tableau.com/views/_17658672451790/sheet7?:language=ko-KR&:display_count=n&:origin=viz_share_link)
+[![도로 돌발상황 대시보드](outputs/figures/dashboard_screenshot.png)](https://public.tableau.com/views/_17658672451790/sheet7?:language=ko-KR&:display_count=n&:origin=viz_share_link)
 
-Tableau로 제작한 인터랙티브 대시보드입니다. 도로명, 도로타입, 돌발유형, 요일, 월,
-평일/주말, 지도 등 총 8가지 방식으로 필터링하여 대한민국 도로 돌발상황을
-직관적으로 분석·확인할 수 있습니다.
+Tableau로 제작한 인터랙티브 대시보드입니다. 도로명·돌발유형·도로타입 드롭다운으로
+필터링하면 좌측 상단의 전체 돌발건수(623,188)와 아래 구성 요소가 함께 갱신된다.
+
+- **돌발 유형별 발생 규모**: 돌발구분(기타돌발/공사/교통사고/기상/재난/기타)별 건수 표
+- **요일별 발생 건수**: 월~일 돌발구분 누적 막대 차트, 옆에 평일/주말 시간대(0~23시)별
+  건수 표
+- **월별 돌발유형 추이**: 1~12월 돌발상세구분 Top 카테고리별 추이 꺾은선 그래프
+- **도로 돌발 발생 지점의 공간적 분포**: 대한민국 지도 위에 실제 돌발 지점을 점으로
+  표시 — 고속국도망을 따라 밀집된 패턴이 그대로 드러난다
+- **상위 도로타입 / 상위 도로명**: 도로타입별·개별 노선별(경부고속도로, 영동고속도로 등)
+  돌발 건수 랭킹 표
 
 ▶ [Tableau Public에서 인터랙티브 버전 보기](https://public.tableau.com/views/_17658672451790/sheet7?:language=ko-KR&:display_count=n&:origin=viz_share_link)
 
