@@ -149,10 +149,10 @@ ITS 국가교통정보센터의 도로 돌발상황 데이터(62.3만 건, 2024-
 | `지역` | 위경도(X, Y) → `geopandas`로 17개 시/도 행정경계와 point-in-polygon 매칭, 실패 시(약 0.3%) 최근접 시/도로 대체 | 지역별 분석(03번) | `region_mapping.assign_region()` |
 | `요일` | `돌발일시` 기준 영문 요일 | 요일별 패턴(02번) | 원본 전처리(raw CSV에 이미 포함) |
 | `요일구분` | `요일` → 평일/주말/공휴일 분류 | 평일-주말 비교(02번) | 원본 전처리(raw CSV에 이미 포함) |
-| `loc_score`(위치점수) | `돌발내용` 텍스트를 정규식으로 파싱해 터널/교량/IC·JC/고속도로 등 키워드 매칭 (0~20점) | 위험도 스코어링(04번) | `04_risk_scoring.ipynb` |
-| `inc_score`(돌발유형점수) | `돌발상세구분`/`돌발구분` 값을 사고·고장·공사·정체·기상 등으로 매핑 (0~25점) | 위험도 스코어링(04번) | `04_risk_scoring.ipynb` |
-| `lane_score`(차로점수) | `돌발내용` 텍스트를 정규식으로 파싱해 전면통제/차로차단 개수/갓길 등 키워드 매칭 (0~40점) | 위험도 스코어링(04번) | `04_risk_scoring.ipynb` |
-| `time_score`(시간점수) | `hour` → 출퇴근/주간/야간 구간 매핑 (0~15점) | 위험도 스코어링(04번) | `04_risk_scoring.ipynb` |
+| `loc_score`(위치점수) | `돌발내용` 텍스트를 정규식으로 파싱해 터널/교량/IC·JC/고속도로 등 키워드 매칭 (0~20점) | 위험도 스코어링(04번) | `risk_scoring.location_score()` |
+| `inc_score`(돌발유형점수) | `돌발상세구분`/`돌발구분` 값을 사고·고장·공사·정체·기상 등으로 매핑 (0~25점) | 위험도 스코어링(04번) | `risk_scoring.incident_score()` |
+| `lane_score`(차로점수) | `돌발내용` 텍스트를 정규식으로 파싱해 전면통제/차로차단 개수/갓길 등 키워드 매칭 (0~40점) | 위험도 스코어링(04번) | `risk_scoring.lane_score()` |
+| `time_score`(시간점수) | `hour` → 출퇴근/주간/야간 구간 매핑 (0~15점) | 위험도 스코어링(04번) | `risk_scoring.time_score()` |
 | `처리시간(분)` | `돌발종료일시 - 돌발일시` (진행중 `-`, 데이터 오류 음수값 제외) | 처리시간 분석(06번) | `06_accident_duration.ipynb` |
 
 ### 지역 매핑 방법론
@@ -482,7 +482,7 @@ jupyter notebook notebooks/
 ```
 .
 ├── data/                          # 전체 데이터(gzip), 샘플, 스키마 안내, 행정경계
-├── src/                           # load_data / region_mapping / plot_config
+├── src/                           # load_data / region_mapping / risk_scoring / constants / plot_config / notebook_setup
 ├── notebooks/                     # 01_eda ~ 06_accident_duration
 ├── outputs/figures/               # 각 노트북 실행 결과 PNG
 └── requirements.txt
